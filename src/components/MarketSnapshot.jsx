@@ -1,43 +1,34 @@
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { TrendingUp, Search } from 'lucide-react';
 
-const indices = [
-  { name: 'NIFTY 50', last: 23200.5, chg: 0.62 },
-  { name: 'NIFTY BANK', last: 49875.9, chg: -0.18 },
-  { name: 'SENSEX', last: 76980.3, chg: 0.41 },
-  { name: 'NIFTY IT', last: 36420.1, chg: 0.25 },
-];
-
-const stocksData = [
-  { symbol: 'RELIANCE', name: 'Reliance Industries', price: 2965.4, pe: 27.3, pb: 2.4, mcap: '20.4T' },
-  { symbol: 'TCS', name: 'Tata Consultancy Services', price: 3942.1, pe: 30.8, pb: 15.4, mcap: '14.6T' },
-  { symbol: 'HDFCBANK', name: 'HDFC Bank', price: 1542.3, pe: 19.2, pb: 2.8, mcap: '11.5T' },
-  { symbol: 'ICICIBANK', name: 'ICICI Bank', price: 1178.6, pe: 20.4, pb: 3.4, mcap: '8.6T' },
-  { symbol: 'INFY', name: 'Infosys', price: 1624.8, pe: 24.7, pb: 7.8, mcap: '6.8T' },
-  { symbol: 'ITC', name: 'ITC', price: 462.9, pe: 26.1, pb: 7.1, mcap: '5.8T' },
-  { symbol: 'LT', name: 'Larsen & Toubro', price: 3698.2, pe: 31.2, pb: 6.3, mcap: '5.4T' },
-  { symbol: 'HINDUNILVR', name: 'Hindustan Unilever', price: 2420.5, pe: 56.4, pb: 10.2, mcap: '5.1T' },
-  { symbol: 'SBIN', name: 'State Bank of India', price: 840.7, pe: 13.8, pb: 2.0, mcap: '7.5T' },
-  { symbol: 'BHARTIARTL', name: 'Bharti Airtel', price: 1388.4, pe: 63.2, pb: 9.1, mcap: '8.2T' },
-  { symbol: 'BAJFINANCE', name: 'Bajaj Finance', price: 7350.0, pe: 34.6, pb: 7.9, mcap: '4.4T' },
-  { symbol: 'KOTAKBANK', name: 'Kotak Mahindra Bank', price: 1740.3, pe: 23.5, pb: 3.1, mcap: '3.6T' },
-];
-
-function formatChg(chg) {
-  const sign = chg >= 0 ? '+' : '';
-  const color = chg >= 0 ? 'text-emerald-400' : 'text-rose-400';
-  return <span className={color}>{sign}{chg.toFixed(2)}%</span>;
-}
-
 export default function MarketSnapshot() {
-  const [q, setQ] = React.useState('');
-  const filtered = React.useMemo(() => {
+  const [q, setQ] = useState('');
+  const [data, setData] = useState({ indices: [], stocks: [] });
+  const [loading, setLoading] = useState(true);
+  const BASE = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000';
+
+  useEffect(() => {
+    let mounted = true;
+    setLoading(true);
+    fetch(`${BASE}/api/market`).then(r => r.json()).then(json => {
+      if (mounted) setData(json);
+    }).catch(() => {}).finally(() => mounted && setLoading(false));
+    return () => { mounted = false; };
+  }, [BASE]);
+
+  const filtered = useMemo(() => {
     const s = q.trim().toLowerCase();
-    if (!s) return stocksData;
-    return stocksData.filter(x =>
+    if (!s) return data.stocks;
+    return data.stocks.filter(x =>
       x.symbol.toLowerCase().includes(s) || x.name.toLowerCase().includes(s)
     );
-  }, [q]);
+  }, [q, data]);
+
+  function formatChg(chg) {
+    const sign = chg >= 0 ? '+' : '';
+    const color = chg >= 0 ? 'text-emerald-400' : 'text-rose-400';
+    return <span className={color}>{sign}{chg.toFixed(2)}%</span>;
+  }
 
   return (
     <section className="space-y-5">
@@ -47,11 +38,11 @@ export default function MarketSnapshot() {
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {indices.map((idx) => (
+        {(data.indices || []).map((idx) => (
           <div key={idx.name} className="rounded-xl border border-white/10 bg-slate-900/40 p-4">
             <div className="text-xs text-slate-400">{idx.name}</div>
-            <div className="mt-1 text-xl font-semibold">{idx.last.toLocaleString('en-IN')}</div>
-            <div className="mt-1 text-sm">{formatChg(idx.chg)}</div>
+            <div className="mt-1 text-xl font-semibold">{Number(idx.last).toLocaleString('en-IN')}</div>
+            <div className="mt-1 text-sm">{formatChg(Number(idx.chg))}</div>
           </div>
         ))}
       </div>
@@ -84,9 +75,9 @@ export default function MarketSnapshot() {
                 <tr key={s.symbol} className="border-t border-white/5 hover:bg-slate-900/30">
                   <td className="px-4 py-2 font-mono">{s.symbol}</td>
                   <td className="px-4 py-2">{s.name}</td>
-                  <td className="px-4 py-2 text-right">₹{s.price.toLocaleString('en-IN')}</td>
-                  <td className="px-4 py-2 text-right">{s.pe.toFixed(1)}</td>
-                  <td className="px-4 py-2 text-right">{s.pb.toFixed(1)}</td>
+                  <td className="px-4 py-2 text-right">₹{Number(s.price).toLocaleString('en-IN')}</td>
+                  <td className="px-4 py-2 text-right">{Number(s.pe).toFixed(1)}</td>
+                  <td className="px-4 py-2 text-right">{Number(s.pb).toFixed(1)}</td>
                   <td className="px-4 py-2 text-right">{s.mcap}</td>
                 </tr>
               ))}
@@ -100,7 +91,7 @@ export default function MarketSnapshot() {
         </div>
       </div>
 
-      <p className="text-xs text-slate-500">Data is illustrative and formatted for Indian market conventions (₹, en-IN). Connect the live market feed in the backend to make this real-time.</p>
+      <p className="text-xs text-slate-500">Indices and stocks powered by backend API. Replace stubs with live NSE/BSE data provider for production use.</p>
     </section>
   );
 }

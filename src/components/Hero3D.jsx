@@ -5,7 +5,7 @@ export default function Hero3D({ onPrimaryClick }) {
   return (
     <section className="relative w-full h-[70vh] md:h-[80vh] overflow-hidden rounded-3xl bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950">
       <div className="absolute inset-0">
-        <Spline scene="https://prod.spline.design/41MGRk-UDPKO-l6W/scene.splinecode" style={{ width: '100%', height: '100%' }} />
+        <Spline scene="https://prod.spline.design/qQUip0dJPqrrPryE/scene.splinecode" style={{ width: '100%', height: '100%' }} />
       </div>
 
       {/* Subtle gradient overlays that don't block interactions */}
