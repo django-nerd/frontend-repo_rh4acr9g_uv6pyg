@@ -7,10 +7,26 @@ export default function NavBar({ onNavigate, active }) {
     { key: 'market', label: 'Market', icon: LineChart },
     { key: 'tools', label: 'Tools', icon: Calculator },
   ];
+
+  function handleBrandClick() {
+    if (active === 'home') {
+      // Refresh the page if already on home
+      window.location.reload();
+    } else {
+      onNavigate('home');
+    }
+  }
+
   return (
     <nav className="sticky top-0 z-50 bg-slate-950/70 backdrop-blur border-b border-white/10">
       <div className="max-w-7xl mx-auto px-6 sm:px-8 py-3 flex items-center gap-6">
-        <div className="text-sm font-semibold text-white/80">IPO Analyser</div>
+        <button
+          onClick={handleBrandClick}
+          className="text-sm sm:text-base font-semibold text-white hover:text-emerald-300 transition-colors"
+          aria-label="GoDigitalNest Home"
+        >
+          GoDigitalNest
+        </button>
         <div className="flex items-center gap-1 text-sm">
           {items.map(({ key, label, icon: Icon }) => (
             <button

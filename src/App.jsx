@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import NavBar from './components/NavBar';
 import Hero3D from './components/Hero3D';
 import CompsSelector from './components/CompsSelector';
@@ -6,6 +6,7 @@ import ValuationResults from './components/ValuationResults';
 import PredictionPanel from './components/PredictionPanel';
 import MarketSnapshot from './components/MarketSnapshot';
 import TradingTools from './components/TradingTools';
+import IpoTicker from './components/IpoTicker';
 
 function App() {
   const [page, setPage] = useState('home');
@@ -13,6 +14,10 @@ function App() {
     multiples: { evEbitda: true, pe: true, pb: true },
     growth: 15,
   });
+
+  useEffect(() => {
+    document.title = 'GoDigitalNest';
+  }, []);
 
   // Simulated analytics calculations for demo UI
   const results = useMemo(() => {
@@ -80,6 +85,8 @@ function App() {
   return (
     <div className="min-h-screen bg-slate-950 text-white">
       <NavBar onNavigate={setPage} active={page} />
+
+      <IpoTicker />
 
       {page === 'home' && (
         <main className="max-w-7xl mx-auto px-6 sm:px-8 space-y-10 py-8">
