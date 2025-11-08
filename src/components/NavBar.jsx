@@ -1,45 +1,41 @@
 import React from 'react';
-import { Home, LineChart, Calculator } from 'lucide-react';
+import { Home, Wrench, User, HelpCircle } from 'lucide-react';
 
-export default function NavBar({ onNavigate, active }) {
-  const items = [
-    { key: 'home', label: 'Home', icon: Home },
-    { key: 'market', label: 'Market', icon: LineChart },
-    { key: 'tools', label: 'Tools', icon: Calculator },
-  ];
-
-  function handleBrandClick() {
-    if (active === 'home') {
-      // Refresh the page if already on home
-      window.location.reload();
-    } else {
-      onNavigate('home');
-    }
-  }
+const NavBar = ({ current, onNavigate }) => {
+  const linkClasses = (key) =>
+    `inline-flex items-center gap-2 px-3 py-2 rounded-md transition-colors ${
+      current === key
+        ? 'bg-indigo-600 text-white'
+        : 'text-slate-200 hover:text-white hover:bg-indigo-500/30'
+    }`;
 
   return (
-    <nav className="sticky top-0 z-50 bg-slate-950/70 backdrop-blur border-b border-white/10">
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 py-3 flex items-center gap-6">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-slate-900/70 backdrop-blur border-b border-white/10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         <button
-          onClick={handleBrandClick}
-          className="text-sm sm:text-base font-semibold text-white hover:text-emerald-300 transition-colors"
+          onClick={() => onNavigate('home')}
+          className="text-xl sm:text-2xl font-bold tracking-tight text-white"
           aria-label="GoDigitalNest Home"
         >
           GoDigitalNest
         </button>
-        <div className="flex items-center gap-1 text-sm">
-          {items.map(({ key, label, icon: Icon }) => (
-            <button
-              key={key}
-              onClick={() => onNavigate(key)}
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-lg transition-colors ${active === key ? 'bg-emerald-500/15 text-emerald-300' : 'text-slate-300 hover:text-white hover:bg-white/5'}`}
-            >
-              <Icon className="w-4 h-4" />
-              <span>{label}</span>
-            </button>
-          ))}
-        </div>
+        <nav className="flex items-center gap-2">
+          <button className={linkClasses('home')} onClick={() => onNavigate('home')}>
+            <Home size={18} /> <span className="hidden sm:inline">Home</span>
+          </button>
+          <button className={linkClasses('tools')} onClick={() => onNavigate('tools')}>
+            <Wrench size={18} /> <span className="hidden sm:inline">Tools</span>
+          </button>
+          <button className={linkClasses('auth')} onClick={() => onNavigate('auth')}>
+            <User size={18} /> <span className="hidden sm:inline">Login / Sign Up</span>
+          </button>
+          <button className={linkClasses('support')} onClick={() => onNavigate('support')}>
+            <HelpCircle size={18} /> <span className="hidden sm:inline">Support</span>
+          </button>
+        </nav>
       </div>
-    </nav>
+    </header>
   );
-}
+};
+
+export default NavBar;
