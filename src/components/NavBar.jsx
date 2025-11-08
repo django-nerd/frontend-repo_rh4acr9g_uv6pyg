@@ -1,5 +1,5 @@
 import React from 'react';
-import { Home, Wrench, User, HelpCircle } from 'lucide-react';
+import { Home, Wrench, User, HelpCircle, LineChart } from 'lucide-react';
 
 const NavBar = ({ current, onNavigate }) => {
   const linkClasses = (key) =>
@@ -22,6 +22,9 @@ const NavBar = ({ current, onNavigate }) => {
         <nav className="flex items-center gap-2">
           <button className={linkClasses('home')} onClick={() => onNavigate('home')}>
             <Home size={18} /> <span className="hidden sm:inline">Home</span>
+          </button>
+          <button className={linkClasses('ipos')} onClick={() => onNavigate('ipos')}>
+            <LineChart size={18} /> <span className="hidden sm:inline">IPOs</span>
           </button>
           <button className={linkClasses('tools')} onClick={() => onNavigate('tools')}>
             <Wrench size={18} /> <span className="hidden sm:inline">Tools</span>

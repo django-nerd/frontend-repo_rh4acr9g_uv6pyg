@@ -1,16 +1,30 @@
 import React from 'react';
 import Hero3D from './Hero3D';
+import IpoTicker from './IpoTicker';
 
-const HomeSection = () => {
+const HomeSection = ({ onOpenIpos, onSelectIpo }) => {
   return (
     <div className="bg-slate-950 text-white">
       <Hero3D />
+      <div className="relative z-10">
+        <IpoTicker onSelect={onSelectIpo} />
+      </div>
       <section className="relative z-10 max-w-6xl mx-auto px-6 py-10">
-        <h2 className="text-2xl sm:text-3xl font-bold">Why GoDigitalNest</h2>
-        <p className="mt-3 text-slate-300 max-w-3xl">
-          Clean, readable typography and higher contrast ensure every detail is visible against the background.
-          Track IPOs, explore markets, and run trading math with clarity.
-        </p>
+        <div className="flex items-start justify-between gap-4 flex-col sm:flex-row">
+          <div>
+            <h2 className="text-2xl sm:text-3xl font-bold">Why GoDigitalNest</h2>
+            <p className="mt-3 text-slate-300 max-w-3xl">
+              Clean, readable typography and higher contrast ensure every detail is visible against the background.
+              Track IPOs, explore markets, and run trading math with clarity.
+            </p>
+          </div>
+          <button
+            onClick={onOpenIpos}
+            className="shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 transition-colors text-white"
+          >
+            Browse All IPOs
+          </button>
+        </div>
         <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="rounded-xl p-5 bg-slate-800/70 border border-white/10">
             <h3 className="font-semibold">IPO Intelligence</h3>
